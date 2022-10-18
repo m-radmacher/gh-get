@@ -2,7 +2,9 @@
   📦 GH-GET
 </h1>
 
+<p align="center">
 GH-GET allows you to easily retrieve the latest artifact of a workflow from GitHub.
+</p>
 
 ## Arguments
 
