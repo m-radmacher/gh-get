@@ -5,10 +5,11 @@ permissions:
 
 on:
   workflow_dispatch:
-    version:
-        description: 'SEMVER version as string'
-        required: true 
-        type: string
+    inputs:
+      version:
+          description: 'SEMVER version as string'
+          required: true 
+          type: string
 
 jobs:
   release:
