@@ -39,7 +39,7 @@ jobs:
           github.rest.git.createRef({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            ref: 'refs/tags/${{inputs.version}}',
+            ref: 'refs/tags/v${{inputs.version}}',
             sha: context.sha
           })
     - name: Release
@@ -48,4 +48,5 @@ jobs:
         files: gh-get.exe
         tag_name: v${{inputs.version}}
         name: Version ${{inputs.version}}
-        draft: true
+        generate_release_notes: true
+        fail_on_unmatched_files: true
