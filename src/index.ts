@@ -12,6 +12,12 @@ type Configuration = {
   overwrite?: boolean;
 };
 
+const logFile = fs.createWriteStream(path.join(__dirname, 'debug.log'), { flags: 'w' });
+function log(str: any) {
+  console.log(str);
+  logFile.write(str + '\n');
+}
+
 async function run() {
   const config: Configuration = {};
   const args = process.argv;
@@ -48,28 +54,34 @@ async function run() {
         config.overwrite = Boolean(argParts[1]);
         break;
       default:
-        console.log('Unknown arguement: ' + argParts[0]);
+        log('Unknown arguement: ' + argParts[0]);
         break;
     }
   }
 
   if (!config.artifactName) {
-    throw new Error('Artifact name is not set.');
+    log('Artifact name is not set.');
+    return;
   }
   if (!config.outputPath) {
-    throw new Error('Output path is not set.');
+    log('Output path is not set.');
+    return;
   }
   if (!config.owner) {
-    throw new Error('Owner is not set.');
+    log('Owner is not set.');
+    return;
   }
   if (!config.pat) {
-    throw new Error('Person access token is not set.');
+    log('Person access token is not set.');
+    return;
   }
   if (!config.repo) {
-    throw new Error('Repository is not set.');
+    log('Repository is not set.');
+    return;
   }
   if (!config.workflowId) {
-    throw new Error('Workflow id is not set.');
+    log('Workflow id is not set.');
+    return;
   }
 
   const octokit = new Octokit({
@@ -102,7 +114,8 @@ async function run() {
   }
 
   if (!runId) {
-    throw new Error('Could not find any workflow runs.');
+    log('Could not find any workflow runs.');
+    return;
   }
 
   const { data: artifacts } = await octokit.rest.actions.listWorkflowRunArtifacts({
@@ -131,14 +144,22 @@ async function run() {
 
   if (config.overwrite) {
     // overwrite old file
-    fs.rmSync(path.join(config.outputPath, `${config.artifactName}.zip`));
-    fs.appendFileSync(path.join(config.outputPath, `${config.artifactName}.zip`), Buffer.from(file as any));
+    try {
+      fs.rmSync(path.join(config.outputPath, `${config.artifactName}.zip`));
+      fs.appendFileSync(path.join(config.outputPath, `${config.artifactName}.zip`), Buffer.from(file as ArrayBuffer));
+    } catch (err) {
+      log(err);
+    }
   } else {
     // create new file
-    fs.appendFileSync(
-      path.join(config.outputPath, `${config.artifactName}-${highestRunNumber}.zip`),
-      Buffer.from(file as any)
-    );
+    try {
+      fs.appendFileSync(
+        path.join(config.outputPath, `${config.artifactName}-${highestRunNumber}.zip`),
+        Buffer.from(file as ArrayBuffer)
+      );
+    } catch (err) {
+      log(err);
+    }
   }
 }
 
