@@ -20,6 +20,8 @@ jobs:
       with:
         node-version: 16
     - run: yarn install --frozen-lockfile
+    - name: Install pkg
+      run: npm i -g pkg
     - name: Run tsc
       run: yarn build
     - name: Create executable
