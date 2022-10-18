@@ -1,0 +1,24 @@
+name: Build project
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 16
+    - run: yarn install --frozen-lockfile
+    - name: Run tsc
+      run: yarn build
+    - name: Create executable
+      run: yarn package
+    - uses: actions/upload-artifact@v3
+      with:
+        name: gh-get
+        path: ./gh-get.exe
+        retention-days: 7
