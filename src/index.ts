@@ -12,7 +12,7 @@ type Configuration = {
   overwrite?: boolean;
 };
 
-const logFile = fs.createWriteStream(path.join(__dirname, 'debug.log'), { flags: 'w' });
+const logFile = fs.createWriteStream(path.join('debug.log'), { flags: 'w' });
 function log(str: any) {
   console.log(str);
   logFile.write(str + '\n');
