@@ -23,4 +23,4 @@ jobs:
       with:
         name: gh-get
         path: ./gh-get.exe
-        retention-days: 7
+        retention-days: 3
