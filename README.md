@@ -1,6 +1,6 @@
 <h1 align="center">
   📦 GH-GET
-</div>
+</h1>
 
 GH-GET allows you to easily retrieve the latest artifact of a workflow from GitHub.
 
