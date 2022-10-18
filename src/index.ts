@@ -1,6 +1,6 @@
-import { Octokit, App } from "octokit";
-import * as fs from "fs";
-import path from "path";
+import { Octokit } from 'octokit';
+import * as fs from 'fs';
+import path from 'path';
 
 type Configuration = {
   owner?: string;
@@ -16,46 +16,46 @@ async function run() {
   const args = process.argv;
 
   for (const arg of args) {
-    const argParts = arg.split("=");
+    const argParts = arg.split('=');
     switch (argParts[0]) {
-      case "-r":
+      case '-r':
         config.repo = argParts[1];
         break;
-      case "-o":
+      case '-u':
         config.owner = argParts[1];
         break;
-      case "-a":
+      case '-a':
         config.artifactName = argParts[1];
         break;
-      case "-w":
+      case '-w':
         config.workflowId = argParts[1];
         break;
-      case "-o":
+      case '-o':
         config.outputPath = argParts[1];
         break;
-      case "-p":
+      case '-p':
         config.pat = argParts[1];
         break;
     }
   }
 
   if (!config.artifactName) {
-    throw new Error("Artifact name is not set.");
+    throw new Error('Artifact name is not set.');
   }
   if (!config.outputPath) {
-    throw new Error("Output path is not set.");
+    throw new Error('Output path is not set.');
   }
   if (!config.owner) {
-    throw new Error("Owner is not set.");
+    throw new Error('Owner is not set.');
   }
   if (!config.pat) {
-    throw new Error("Person access token is not set.");
+    throw new Error('Person access token is not set.');
   }
   if (!config.repo) {
-    throw new Error("Repository is not set.");
+    throw new Error('Repository is not set.');
   }
   if (!config.workflowId) {
-    throw new Error("Workflow id is not set.");
+    throw new Error('Workflow id is not set.');
   }
 
   const octokit = new Octokit({
@@ -80,7 +80,7 @@ async function run() {
   let highestRunNumber = 0;
   let runId;
   for (const run of workflowRuns.workflow_runs) {
-    if (run.status !== "completed") continue;
+    if (run.status !== 'completed') continue;
     if (run.run_number > highestRunNumber) {
       highestRunNumber = run.run_number;
       runId = run.id;
@@ -88,15 +88,14 @@ async function run() {
   }
 
   if (!runId) {
-    throw new Error("Could not find any workflow runs.");
+    throw new Error('Could not find any workflow runs.');
   }
 
-  const { data: artifacts } =
-    await octokit.rest.actions.listWorkflowRunArtifacts({
-      owner: config.owner,
-      repo: config.repo,
-      run_id: runId,
-    });
+  const { data: artifacts } = await octokit.rest.actions.listWorkflowRunArtifacts({
+    owner: config.owner,
+    repo: config.repo,
+    run_id: runId,
+  });
 
   let artifact;
   for (const af of artifacts.artifacts) {
@@ -106,21 +105,18 @@ async function run() {
   }
 
   if (!artifact) {
-    throw new Error("Could not find artifact.");
+    throw new Error('Could not find artifact.');
   }
 
   const { data: file } = await octokit.rest.actions.downloadArtifact({
     owner: config.owner,
     repo: config.repo,
     artifact_id: artifact.id,
-    archive_format: "zip",
+    archive_format: 'zip',
   });
 
   fs.appendFileSync(
-    path.join(
-      config.outputPath,
-      `${config.artifactName}-${highestRunNumber}.zip`
-    ),
+    path.join(config.outputPath, `${config.artifactName}-${highestRunNumber}.zip`),
     Buffer.from(file as any)
   );
 }
