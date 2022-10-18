@@ -6,6 +6,13 @@
 GH-GET allows you to easily retrieve the latest artifact of a workflow from GitHub.
 </p>
 
+<div align="center">
+  <a href="https://github.com/m-radmacher/gh-get/actions">
+    <img src="https://github.com/m-radmacher/gh-get/workflows/Build%20project/badge.svg"/>
+    <img src="https://github.com/m-radmacher/gh-get/workflows/Lint%20project/badge.svg"/>
+  </a>
+</div>
+
 ## Arguments
 
 - **-r**: The repository containing the workflow
