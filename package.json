@@ -1,0 +1,20 @@
+{
+  "name": "gh-get",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "bundle": "pkg dist/index.js -t node16-win-x64",
+    "p": "yarn build && yarn bundle"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.0",
+    "tsx": "^3.10.3",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "octokit": "^2.0.9"
+  }
+}
