@@ -9,6 +9,7 @@ type Configuration = {
   workflowId?: string;
   outputPath?: string;
   pat?: string;
+  overwrite?: boolean;
 };
 
 async function run() {
@@ -19,22 +20,35 @@ async function run() {
     const argParts = arg.split('=');
     switch (argParts[0]) {
       case '-r':
+      case '--repository':
         config.repo = argParts[1];
         break;
       case '-u':
+      case '--user':
         config.owner = argParts[1];
         break;
       case '-a':
+      case '--artifact':
         config.artifactName = argParts[1];
         break;
       case '-w':
+      case '--workflow':
         config.workflowId = argParts[1];
         break;
       case '-o':
+      case '--output':
         config.outputPath = argParts[1];
         break;
       case '-p':
+      case '--pat':
         config.pat = argParts[1];
+        break;
+      case '-v':
+      case '--overwrite':
+        config.overwrite = Boolean(argParts[1]);
+        break;
+      default:
+        console.log('Unknown arguement: ' + argParts[0]);
         break;
     }
   }
@@ -115,10 +129,17 @@ async function run() {
     archive_format: 'zip',
   });
 
-  fs.appendFileSync(
-    path.join(config.outputPath, `${config.artifactName}-${highestRunNumber}.zip`),
-    Buffer.from(file as any)
-  );
+  if (config.overwrite) {
+    // overwrite old file
+    fs.rmSync(path.join(config.outputPath, `${config.artifactName}.zip`));
+    fs.appendFileSync(path.join(config.outputPath, `${config.artifactName}.zip`), Buffer.from(file as any));
+  } else {
+    // create new file
+    fs.appendFileSync(
+      path.join(config.outputPath, `${config.artifactName}-${highestRunNumber}.zip`),
+      Buffer.from(file as any)
+    );
+  }
 }
 
 run();

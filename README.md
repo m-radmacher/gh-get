@@ -15,12 +15,13 @@ GH-GET allows you to easily retrieve the latest artifact of a workflow from GitH
 
 ## Arguments
 
-- **-r**: The repository containing the workflow
-- **-u**: The owner of the repository
-- **-a**: The name of your artifact (can be configured in the actions .yml)
-- **-w**: The id of the workflow or the name of the actions .yml file
-- **-o**: The output path. The file name will always follow this schema: `${artifactName}-${runNumber}.zip`
-- **-p**: A personal access token with the `repo` permission
+- **-r**/**--repository**: The repository containing the workflow
+- **-u**/**--user**: The owner of the repository
+- **-a**/**--artifact**: The name of your artifact (can be configured in the actions .yml)
+- **-w**/**--workflow**: The id of the workflow or the name of the actions .yml file
+- **-o**/**--output**: The output path. The file name will always follow this schema: `${artifactName}-${runNumber}.zip`
+- **-p**/**--pat**: A personal access token with the `repo` permission
+- **-f**/**--overwrite**: Overwrite the old file instead of creating a new one? Changes the file schema to `${artifactName}.zip`
 
 ## Example
 
