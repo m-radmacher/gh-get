@@ -149,8 +149,11 @@ async function run() {
   if (config.overwrite) {
     // overwrite old file
     try {
-      fs.rmSync(path.join(config.outputPath, `${config.artifactName}.zip`));
-      fs.appendFileSync(path.join(config.outputPath, `${config.artifactName}.zip`), Buffer.from(file as ArrayBuffer));
+      const completeOutputPath = path.join(config.outputPath, `${config.artifactName}.zip`);
+      if (fs.existsSync(completeOutputPath)) {
+        fs.rmSync(completeOutputPath); // remove old file if it exists
+      }
+      fs.appendFileSync(completeOutputPath, Buffer.from(file as ArrayBuffer));
     } catch (err) {
       log(err);
     }
