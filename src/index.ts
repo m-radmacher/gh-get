@@ -51,7 +51,11 @@ async function run() {
         break;
       case '-v':
       case '--overwrite':
-        config.overwrite = Boolean(argParts[1]);
+        if (argParts[1] === null || argParts[1] === undefined) {
+          config.overwrite = true;
+        } else {
+          config.overwrite = Boolean(argParts[1]);
+        }
         break;
       default:
         log('Unknown arguement: ' + argParts[0]);
