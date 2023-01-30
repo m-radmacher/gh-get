@@ -249,6 +249,13 @@
   dependencies:
     "@octokit/types" "^8.0.0"
 
+"@octokit/plugin-paginate-rest@^6.0.0":
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/@octokit/plugin-paginate-rest/-/plugin-paginate-rest-6.0.0.tgz#f34b5a7d9416019126042cd7d7b811e006c0d561"
+  integrity sha512-Sq5VU1PfT6/JyuXPyt04KZNVsFOSBaYOAq2QRZUwzVlI10KFvcbUo8lR258AAQL1Et60b0WuVik+zOWKLuDZxw==
+  dependencies:
+    "@octokit/types" "^9.0.0"
+
 "@octokit/plugin-rest-endpoint-methods@^7.0.0":
   version "7.0.1"
   resolved "https://registry.yarnpkg.com/@octokit/plugin-rest-endpoint-methods/-/plugin-rest-endpoint-methods-7.0.1.tgz#f7ebe18144fd89460f98f35a587b056646e84502"
@@ -1230,15 +1237,15 @@ node-fetch@^2.6.7:
   dependencies:
     whatwg-url "^5.0.0"
 
-octokit@^2.0.13:
-  version "2.0.13"
-  resolved "https://registry.yarnpkg.com/octokit/-/octokit-2.0.13.tgz#86bd921b7d5db6dfcd70cccf4cc68e5ec94adc21"
-  integrity sha512-engPEQZ5FgTZz9Z99zH6LBZ1SzWjeWd6cqPWyeRSqCVYQqyfiFpDTwRQGVsZmpFNDcBRl85IiFdVx8TliqR1BQ==
+octokit@^2.0.14:
+  version "2.0.14"
+  resolved "https://registry.yarnpkg.com/octokit/-/octokit-2.0.14.tgz#e2057097a6c9cac3e7724a4365b450b7c694a6a4"
+  integrity sha512-z6cgZBFxirpFEQ1La8Lg83GCs5hOV2EPpkYYdjsGNbfQMv8qUGjq294MiRBCbZqLufviakGsPUxaNKe3JrPmsA==
   dependencies:
     "@octokit/app" "^13.1.1"
     "@octokit/core" "^4.0.4"
     "@octokit/oauth-app" "^4.0.6"
-    "@octokit/plugin-paginate-rest" "^5.0.0"
+    "@octokit/plugin-paginate-rest" "^6.0.0"
     "@octokit/plugin-rest-endpoint-methods" "^7.0.0"
     "@octokit/plugin-retry" "^4.0.3"
     "@octokit/plugin-throttling" "^5.0.0"
