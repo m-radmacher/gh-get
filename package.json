@@ -23,6 +23,6 @@
     "typescript": "^5.1.3"
   },
   "dependencies": {
-    "octokit": "^2.0.19"
+    "octokit": "^2.0.22"
   }
 }
