@@ -16,37 +16,65 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
-      with:
-        node-version: 16
-    - run: yarn install --frozen-lockfile
-    - name: Install pkg
-      run: npm i -g pkg
-    - name: Run tsc
-      run: yarn build
-    - name: Create executable
-      run: yarn package
-    - uses: actions/upload-artifact@v3
-      with:
-        name: gh-get
-        path: ./gh-get.exe
-        retention-days: 1
-    - name: Create tag
-      uses: actions/github-script@v5
-      with:
-        script: |
-          github.rest.git.createRef({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            ref: 'refs/tags/v${{inputs.version}}',
-            sha: context.sha
-          })
-    - name: Release
-      uses: softprops/action-gh-release@v0.1.14
-      with:
-        files: gh-get.exe
-        tag_name: v${{inputs.version}}
-        name: Version ${{inputs.version}}
-        generate_release_notes: true
-        fail_on_unmatched_files: true
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 8
+          run_install: false
+        
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+        
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+            
+      - name: Install dependencies
+        run: pnpm install
+            
+      - name: Install pkg
+        run: pnpm i -g pkg
+            
+      - name: Run tsc
+        run: pnpm build
+            
+      - name: Create executable
+        run: pnpm package
+            
+      - uses: actions/upload-artifact@v3
+        with:
+          name: gh-get
+          path: ./gh-get.exe
+          retention-days: 1
+        
+      - name: Create tag
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/v${{inputs.version}}',
+              sha: context.sha
+            })
+        
+      - name: Release
+        uses: softprops/action-gh-release@v0.1.14
+        with:
+          files: gh-get.exe
+          tag_name: v${{inputs.version}}
+          name: Version ${{inputs.version}}
+          generate_release_notes: true
+          fail_on_unmatched_files: true
