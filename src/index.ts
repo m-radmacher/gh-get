@@ -1,6 +1,6 @@
-import { Octokit } from 'octokit';
-import * as fs from 'fs';
-import path from 'path';
+import { Octokit } from "octokit";
+import * as fs from "fs";
+import path from "path";
 
 type Configuration = {
   owner?: string;
@@ -12,10 +12,10 @@ type Configuration = {
   overwrite?: boolean;
 };
 
-const logFile = fs.createWriteStream(path.join('debug.log'), { flags: 'w' });
-function log(str: any) {
+const logFile = fs.createWriteStream(path.join("debug.log"), { flags: "w" });
+function log(str: unknown) {
   console.log(str);
-  logFile.write(str + '\n');
+  logFile.write(str + "\n");
 }
 
 async function run() {
@@ -23,34 +23,34 @@ async function run() {
   const args = process.argv;
 
   for (const arg of args) {
-    const argParts = arg.split('=');
+    const argParts = arg.split("=");
     switch (argParts[0]) {
-      case '-r':
-      case '--repository':
+      case "-r":
+      case "--repository":
         config.repo = argParts[1];
         break;
-      case '-u':
-      case '--user':
+      case "-u":
+      case "--user":
         config.owner = argParts[1];
         break;
-      case '-a':
-      case '--artifact':
+      case "-a":
+      case "--artifact":
         config.artifactName = argParts[1];
         break;
-      case '-w':
-      case '--workflow':
+      case "-w":
+      case "--workflow":
         config.workflowId = argParts[1];
         break;
-      case '-o':
-      case '--output':
+      case "-o":
+      case "--output":
         config.outputPath = argParts[1];
         break;
-      case '-p':
-      case '--pat':
+      case "-p":
+      case "--pat":
         config.pat = argParts[1];
         break;
-      case '-v':
-      case '--overwrite':
+      case "-v":
+      case "--overwrite":
         if (argParts[1] === null || argParts[1] === undefined) {
           config.overwrite = true;
         } else {
@@ -58,33 +58,33 @@ async function run() {
         }
         break;
       default:
-        log('Unknown arguement: ' + argParts[0]);
+        log("Unknown arguement: " + argParts[0]);
         break;
     }
   }
 
   if (!config.artifactName) {
-    log('Artifact name is not set.');
+    log("Artifact name is not set.");
     return;
   }
   if (!config.outputPath) {
-    log('Output path is not set.');
+    log("Output path is not set.");
     return;
   }
   if (!config.owner) {
-    log('Owner is not set.');
+    log("Owner is not set.");
     return;
   }
   if (!config.pat) {
-    log('Person access token is not set.');
+    log("Person access token is not set.");
     return;
   }
   if (!config.repo) {
-    log('Repository is not set.');
+    log("Repository is not set.");
     return;
   }
   if (!config.workflowId) {
-    log('Workflow id is not set.');
+    log("Workflow id is not set.");
     return;
   }
 
@@ -110,7 +110,7 @@ async function run() {
   let highestRunNumber = 0;
   let runId;
   for (const run of workflowRuns.workflow_runs) {
-    if (run.status !== 'completed') continue;
+    if (run.status !== "completed") continue;
     if (run.run_number > highestRunNumber) {
       highestRunNumber = run.run_number;
       runId = run.id;
@@ -118,7 +118,7 @@ async function run() {
   }
 
   if (!runId) {
-    log('Could not find any workflow runs.');
+    log("Could not find any workflow runs.");
     return;
   }
 
@@ -136,14 +136,14 @@ async function run() {
   }
 
   if (!artifact) {
-    throw new Error('Could not find artifact.');
+    throw new Error("Could not find artifact.");
   }
 
   const { data: file } = await octokit.rest.actions.downloadArtifact({
     owner: config.owner,
     repo: config.repo,
     artifact_id: artifact.id,
-    archive_format: 'zip',
+    archive_format: "zip",
   });
 
   if (config.overwrite) {
@@ -162,7 +162,7 @@ async function run() {
     try {
       fs.appendFileSync(
         path.join(config.outputPath, `${config.artifactName}-${highestRunNumber}.zip`),
-        Buffer.from(file as ArrayBuffer)
+        Buffer.from(file as ArrayBuffer),
       );
     } catch (err) {
       log(err);
