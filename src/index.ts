@@ -13,7 +13,7 @@ type Configuration = {
 };
 
 const logFile = fs.createWriteStream(path.join("debug.log"), { flags: "w" });
-function log(str: any) {
+function log(str: unknown) {
   console.log(str);
   logFile.write(str + "\n");
 }
